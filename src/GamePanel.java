@@ -7,18 +7,13 @@ import java.util.ArrayList;
 public class GamePanel extends JPanel implements KeyListener {
     private Ball ball;
     private Paddle paddle;
-    private ArrayList<Block> blocks = new ArrayList<Block>();
+    private ArrayList<Brick> blocks = new ArrayList<>();
     private Image image;
     private Thread thread;
     private boolean pause = false;
 
     public GamePanel() {
-        ball = new Ball();
-        paddle = new Paddle();
-        blocks.add(new Block(10,10));
-
-        addKeyListener(this);
-        setFocusable(true);
+        resetScene();
     }
 
     public void paint(Graphics g) {
@@ -28,28 +23,38 @@ public class GamePanel extends JPanel implements KeyListener {
         g.drawImage(image, 0, 0, this);
     }
 
+    private void resetScene() {
+        ball = new Ball();
+        paddle = new Paddle();
+        blocks.add(new Brick(10,10));
+
+        addKeyListener(this);
+        setFocusable(true);
+    }
+
     public void update() {
 
-        ball.x += ball.moveX;
-        ball.y += ball.moveY;
+        ball.x += ball.xDirection;
+        ball.y += ball.yDirection;
 
         if(ball.x > (getWidth() - 25) || ball.x < 0) {
-            ball.moveX *= -1;
+            ball.xDirection *= -1;
         }
 
         if(ball.y < 0 || ball.intersects(paddle)) {
-            ball.moveY *= -1;
+            ball.yDirection *= -1;
         }
 
         if (ball.y > getHeight()) {
             thread = null;
-
+            // Loose or game over
+            resetScene();
         }
 
         blocks.forEach(block -> {
             if (ball.intersects(block) && !block.destroyed) {
                 block.destroyed = true;
-                ball.moveY *= -1;
+                ball.yDirection *= -1;
             }
         });
 
@@ -58,12 +63,13 @@ public class GamePanel extends JPanel implements KeyListener {
 
     public void pause() {
         if (!pause) {
-            ball.moveX = 0;
-            ball.moveY = 0;
+            ball.xDirection = 0;
+            ball.yDirection = 0;
             pause = true;
+
         } else {
-            ball.moveX = -1;
-            ball.moveY = -1;
+            ball.xDirection = -1;
+            ball.yDirection = -1;
             pause = false;
         }
     }
@@ -80,7 +86,7 @@ public class GamePanel extends JPanel implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+        if (e.getKeyCode() == KeyEvent.VK_SPACE && thread == null) {
             System.out.println("Space");
             thread = new Thread(() -> {
                 while (true) {

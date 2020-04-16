@@ -1,24 +1,15 @@
 import java.awt.*;
 
-public class Block extends Rectangle {
-//    private int x;
-//    private int y;
-//    private int width;
-//    private int height;
-    public boolean destroyed = false;
+/**
+ * Abstract class Block is a wrapper for Rectangle library class
+ */
+abstract class Block extends Rectangle {
 
-    public Block(int x, int y) {
+    public Block(int x, int y, int width, int height) {
+        this.width = width;
+        this.height = height;
         this.x = x;
         this.y = y;
-        this.width = 50;
-        this.height = 30;
     }
 
-    public void paint(Graphics g) {
-        if (!destroyed) {
-            g.fillRect(this.x, this.y, this.width, this.height);
-            g.setColor(Color.BLACK);
-            g.drawRect(this.x, this.y, this.width, this.height);
-        }
-    }
 }

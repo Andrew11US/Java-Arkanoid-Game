@@ -11,8 +11,8 @@ public class Game implements KeyListener {
     private boolean isRunning = false;
 
     private Game() {
-        frame = new JFrame("Arkanoid v0.3");
-        frame.setSize(500, 500);
+        frame = new JFrame("Arkanoid v0.4");
+        frame.setSize(Const.WINDOW_WIDTH, Const.WINDOW_HEIGHT);
         frame.setLayout(new BorderLayout());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
