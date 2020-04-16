@@ -4,29 +4,30 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
-public class GamePanel extends JPanel implements KeyListener {
+public class GamePanel extends JPanel implements KeyListener, Paintable {
     private Ball ball;
     private Paddle paddle;
-    private ArrayList<Brick> blocks = new ArrayList<>();
+    private ArrayList<Brick> bricks = new ArrayList<>();
     private Image image;
     private Thread thread;
-    private boolean pause = false;
+    private boolean pause = true;
 
     public GamePanel() {
         resetScene();
     }
 
+    @Override
     public void paint(Graphics g) {
         this.ball.paint(g);
         this.paddle.paint(g);
-        blocks.forEach(block -> block.paint(g));
+        bricks.forEach(block -> block.paint(g));
         g.drawImage(image, 0, 0, this);
     }
 
     private void resetScene() {
         ball = new Ball();
         paddle = new Paddle();
-        blocks.add(new Brick(10,10));
+        bricks.add(new Brick(10,10));
 
         addKeyListener(this);
         setFocusable(true);
@@ -51,7 +52,7 @@ public class GamePanel extends JPanel implements KeyListener {
             resetScene();
         }
 
-        blocks.forEach(block -> {
+        bricks.forEach(block -> {
             if (ball.intersects(block) && !block.destroyed) {
                 block.destroyed = true;
                 ball.yDirection *= -1;
@@ -62,16 +63,20 @@ public class GamePanel extends JPanel implements KeyListener {
     }
 
     public void pause() {
-        if (!pause) {
+        System.out.println(pause);
+        pause = !pause;
+        System.out.println(pause);
+
+        if (pause) {
             ball.xDirection = 0;
             ball.yDirection = 0;
-            pause = true;
-
+//            pause = true;
         } else {
             ball.xDirection = -1;
             ball.yDirection = -1;
-            pause = false;
+//            pause = false;
         }
+
     }
 
 
@@ -88,6 +93,7 @@ public class GamePanel extends JPanel implements KeyListener {
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_SPACE && thread == null) {
             System.out.println("Space");
+            pause = false;
             thread = new Thread(() -> {
                 while (true) {
                     update();
@@ -102,16 +108,21 @@ public class GamePanel extends JPanel implements KeyListener {
         }
 
         if (e.getKeyCode() == KeyEvent.VK_RIGHT && paddle.x < (getWidth() - paddle.width)) {
-            paddle.x += 15;
-            update();
+            if (!pause) {
+                paddle.x += 15;
+                update();
+            }
         }
 
         if (e.getKeyCode() == KeyEvent.VK_LEFT && paddle.x > 0) {
-            paddle.x -= 15;
-            update();
+            if (!pause) {
+                paddle.x -= 15;
+                update();
+            }
         }
 
         if (e.getKeyCode() == KeyEvent.VK_P) {
+//            System.out.println("P");
             pause();
         }
     }

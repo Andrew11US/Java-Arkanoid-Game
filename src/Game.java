@@ -22,7 +22,7 @@ public class Game implements KeyListener {
         frame.add(gamePanel);
         frame.setVisible(true);
 
-        run();
+//        run();
 
     }
 
