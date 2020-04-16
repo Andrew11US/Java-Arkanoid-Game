@@ -4,14 +4,14 @@ import java.awt.*;
  * Ball class
  */
 public class Ball extends Block implements Paintable {
-    public int speed = 3;
     public int xDirection;
     public int yDirection;
+    public int speed = 1;
 
     public Ball() {
         super(250,380,Const.BALL_SIZE,Const.BALL_SIZE);
-        this.xDirection = -1;
-        this.yDirection = -1;
+        this.xDirection = 1;
+        this.yDirection = 1;
     }
 
     @Override

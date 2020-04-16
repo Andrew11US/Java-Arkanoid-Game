@@ -11,9 +11,12 @@ public class GamePanel extends JPanel implements KeyListener, Paintable {
     private Image image;
     private Thread thread;
     private boolean pause = true;
+    private int lives = 3;
 
     public GamePanel() {
         resetScene();
+        addKeyListener(this);
+        setFocusable(true);
     }
 
     @Override
@@ -27,16 +30,20 @@ public class GamePanel extends JPanel implements KeyListener, Paintable {
     private void resetScene() {
         ball = new Ball();
         paddle = new Paddle();
-        bricks.add(new Brick(10,10));
 
-        addKeyListener(this);
-        setFocusable(true);
+        for(int i = 1; i < 7; ++i) {
+            for(int j = 0; j < 4; ++j) {
+                bricks.add(new Brick(i*60,j*40));
+            }
+        }
+
+
     }
 
     public void update() {
 
-        ball.x += ball.xDirection;
-        ball.y += ball.yDirection;
+        ball.x += ball.xDirection * ball.speed;
+        ball.y += ball.yDirection * ball.speed;
 
         if(ball.x > (getWidth() - 25) || ball.x < 0) {
             ball.xDirection *= -1;
@@ -50,6 +57,7 @@ public class GamePanel extends JPanel implements KeyListener, Paintable {
             thread = null;
             // Loose or game over
             resetScene();
+            pause();
         }
 
         bricks.forEach(block -> {
@@ -63,20 +71,13 @@ public class GamePanel extends JPanel implements KeyListener, Paintable {
     }
 
     public void pause() {
-        System.out.println(pause);
         pause = !pause;
-        System.out.println(pause);
 
         if (pause) {
-            ball.xDirection = 0;
-            ball.yDirection = 0;
-//            pause = true;
+            ball.speed = 0;
         } else {
-            ball.xDirection = -1;
-            ball.yDirection = -1;
-//            pause = false;
+            ball.speed = 1;
         }
-
     }
 
 
@@ -93,7 +94,7 @@ public class GamePanel extends JPanel implements KeyListener, Paintable {
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_SPACE && thread == null) {
             System.out.println("Space");
-            pause = false;
+            pause();
             thread = new Thread(() -> {
                 while (true) {
                     update();
