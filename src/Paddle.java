@@ -1,10 +1,10 @@
 import java.awt.*;
 
 public class Paddle extends Rectangle {
-    private final int width;
-    private final int height;
-    private int x;
-    private int y;
+//    private final int width;
+//    private final int height;
+//    private int x;
+//    private int y;
 
     public Paddle() {
         this.width = 120;
@@ -16,5 +16,6 @@ public class Paddle extends Rectangle {
     public void paint(Graphics g) {
         g.setColor(Color.BLACK);
         g.fillRect(this.x, this.y, this.width, this.height);
+        g.drawRect(x,y,width,height);
     }
 }

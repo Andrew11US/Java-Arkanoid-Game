@@ -9,19 +9,63 @@ public class GamePanel extends JPanel implements KeyListener {
     private Paddle paddle;
     private ArrayList<Block> blocks = new ArrayList<Block>();
     private Image image;
+    private Thread thread;
+    private boolean pause = false;
 
     public GamePanel() {
         ball = new Ball();
         paddle = new Paddle();
         blocks.add(new Block(10,10));
+
+        addKeyListener(this);
+        setFocusable(true);
     }
 
     public void paint(Graphics g) {
-
         this.ball.paint(g);
         this.paddle.paint(g);
         blocks.forEach(block -> block.paint(g));
-        g.drawImage(this.image, 0, 0, this);
+        g.drawImage(image, 0, 0, this);
+    }
+
+    public void update() {
+
+        ball.x += ball.moveX;
+        ball.y += ball.moveY;
+
+        if(ball.x > (getWidth() - 25) || ball.x < 0) {
+            ball.moveX *= -1;
+        }
+
+        if(ball.y < 0 || ball.intersects(paddle)) {
+            ball.moveY *= -1;
+        }
+
+        if (ball.y > getHeight()) {
+            thread = null;
+
+        }
+
+        blocks.forEach(block -> {
+            if (ball.intersects(block) && !block.destroyed) {
+                block.destroyed = true;
+                ball.moveY *= -1;
+            }
+        });
+
+        repaint();
+    }
+
+    public void pause() {
+        if (!pause) {
+            ball.moveX = 0;
+            ball.moveY = 0;
+            pause = true;
+        } else {
+            ball.moveX = -1;
+            ball.moveY = -1;
+            pause = false;
+        }
     }
 
 
@@ -36,8 +80,37 @@ public class GamePanel extends JPanel implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+            System.out.println("Space");
+            thread = new Thread(() -> {
+                while (true) {
+                    update();
+                    try {
+                        Thread.sleep(10);
+                    } catch (InterruptedException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            });
+            thread.start();
+        }
 
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT && paddle.x < (getWidth() - paddle.width)) {
+            paddle.x += 15;
+            update();
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_LEFT && paddle.x > 0) {
+            paddle.x -= 15;
+            update();
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_P) {
+            pause();
+        }
     }
+
+
 
 
     @Override

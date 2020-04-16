@@ -1,18 +1,19 @@
 import java.awt.*;
 
-public class Ball {
-    private int x, y;
+public class Ball extends Block {
+//    private int x, y;
     private int size = 20;
-    private int speed;
-    private int dirX;
-    private int dirY;
+    public int speed = -1;
+    public int moveX;
+    public int moveY;
 
     public Ball() {
+        super(250,250);
         this.x = 250;
         this.y = 250;
-        this.speed = 1;
-        this.dirX = 0;
-        this.dirY = 1;
+//        this.speed = 1;
+        this.moveX = speed;
+        this.moveY = speed;
     }
 
     public void paint(Graphics g) {
