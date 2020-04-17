@@ -8,16 +8,16 @@ public class Game implements KeyListener {
     private JFrame menuFrame;
     private JFrame frame;
 //    private JLabel scoreLbl;
-    private GamePanel gamePanel;
+    public GamePanel gamePanel;
     private Thread thread;
     private boolean isRunning = false;
 
     private Game() {
         // Initializations
-        frame = new JFrame("Arkanoid v0.4");
+        frame = new JFrame("Arkanoid v0.6");
         gamePanel = new GamePanel();
         menuFrame = new JFrame();
-        JLabel nameLbl = new JLabel("Arkanoid v0.5", SwingConstants.CENTER);
+        JLabel nameLbl = new JLabel("Arkanoid v0.6", SwingConstants.CENTER);
         JButton startBtn = new JButton("Start");
         JButton scoreBtn = new JButton("Scoreboard");
         JButton exitBtn = new JButton("Exit");

@@ -4,19 +4,23 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
-public class GamePanel extends JPanel implements KeyListener, Paintable {
+public class GamePanel extends JPanel implements KeyListener, Paintable, Runnable {
     private Ball ball;
     private Paddle paddle;
     private ArrayList<Brick> bricks = new ArrayList<>();
     private Image image;
     private Thread thread;
     private boolean pause = true;
-    private int lives = 3;
+    private int bricksCount = 0;
+    public int lives = 3;
+    public int score = 0;
+    private boolean isRunning = true;
 
     public GamePanel() {
-        resetScene();
+        resetScene(true);
         addKeyListener(this);
         setFocusable(true);
+//        run();
     }
 
     @Override
@@ -27,25 +31,52 @@ public class GamePanel extends JPanel implements KeyListener, Paintable {
         g.drawImage(image, 0, 0, this);
     }
 
-    private void resetScene() {
+    private void resetScene(boolean isNew) {
         ball = new Ball();
         paddle = new Paddle();
 
-        for(int i = 1; i < 7; ++i) {
-            for(int j = 0; j < 4; ++j) {
-                bricks.add(new Brick(i*60,j*40));
+//        ball.speed = 1;
+//        lives = 3;
+//        if (!bricks.isEmpty()) bricks.clear();
+
+        // TODO: Refactor to add more lives on level passed
+        if (isNew) {
+            score = 0;
+            bricksCount = 0;
+            //*
+            for(int i = 1; i < 7; ++i) {
+                for(int j = 1; j < 5; ++j) {
+                    bricks.add(new Brick(i*60,j*40));
+                    bricksCount++;
+                }
             }
+            /*/
+            for(int i = 2; i < 3; ++i) {
+                for(int j = 2; j < 3; ++j) {
+                    bricks.add(new Brick(i*120,j*40));
+                    bricksCount++;
+                }
+            }
+            //*/
+
+
+
+
+        } else {
+            // Respawn existing bricks
         }
 
 
+//        pause();
+
     }
 
-    public void update() {
+    public void updateView() {
 
         ball.x += ball.xDirection * ball.speed;
         ball.y += ball.yDirection * ball.speed;
 
-        if(ball.x > (getWidth() - 25) || ball.x < 0) {
+        if(ball.x > (getWidth() - 20) || ball.x < 0) {
             ball.xDirection *= -1;
         }
 
@@ -55,18 +86,70 @@ public class GamePanel extends JPanel implements KeyListener, Paintable {
 
         if (ball.y > getHeight()) {
             thread = null;
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
             // Loose or game over
-            resetScene();
-            pause();
+            lives -= 1;
+            if (lives != 0) {
+                resetScene(false);
+
+//                pause();
+            } else {
+                isRunning = !isRunning;
+                System.out.println("Game Over!");
+                removeKeyListener(this);
+            }
+
+//            pause();
         }
 
-        bricks.forEach(block -> {
-            if (ball.intersects(block) && !block.destroyed) {
-                block.destroyed = true;
+        bricks.forEach(brick -> {
+            if (!brick.destroyed && ball.intersects(brick)) {
+                brick.destroyed = true;
                 ball.yDirection *= -1;
+                ball.xDirection *= -1;
+                score++;
+                System.out.println(score);
+
+//                if (score == bricksCount) {
+//                    System.out.println("Level passed!");
+//                    try {
+//                        Thread.sleep(1000);
+//                        thread.interrupt();
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                    this.thread.interrupt();
+//                    this.thread = null;
+//                    this.run();
+//                    this.resetScene();
+//                }
             }
         });
 
+        if (score == bricksCount) {
+            System.out.println("Level passed!");
+
+            if (isRunning) {
+                thread = null;
+
+
+                isRunning = !isRunning;
+
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                resetScene(true);
+                run();
+                isRunning = !isRunning;
+            }
+        }
         repaint();
     }
 
@@ -78,6 +161,23 @@ public class GamePanel extends JPanel implements KeyListener, Paintable {
         } else {
             ball.speed = 1;
         }
+    }
+
+    @Override
+    public void run() {
+//        resetScene();
+//        pause();
+        thread = new Thread(() -> {
+            while (isRunning) {
+                updateView();
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+        thread.start();
     }
 
 
@@ -96,8 +196,8 @@ public class GamePanel extends JPanel implements KeyListener, Paintable {
             System.out.println("Space");
             pause();
             thread = new Thread(() -> {
-                while (true) {
-                    update();
+                while (isRunning) {
+                    updateView();
                     try {
                         Thread.sleep(10);
                     } catch (InterruptedException ex) {
@@ -111,14 +211,14 @@ public class GamePanel extends JPanel implements KeyListener, Paintable {
         if (e.getKeyCode() == KeyEvent.VK_RIGHT && paddle.x < (getWidth() - paddle.width)) {
             if (!pause) {
                 paddle.x += 15;
-                update();
+                updateView();
             }
         }
 
         if (e.getKeyCode() == KeyEvent.VK_LEFT && paddle.x > 0) {
             if (!pause) {
                 paddle.x -= 15;
-                update();
+                updateView();
             }
         }
 

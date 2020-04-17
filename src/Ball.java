@@ -12,6 +12,7 @@ public class Ball extends Block implements Paintable {
         super(250,380,Const.BALL_SIZE,Const.BALL_SIZE);
         this.xDirection = 1;
         this.yDirection = 1;
+//        this.speed = 1;
     }
 
     @Override
