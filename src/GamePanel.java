@@ -10,11 +10,14 @@ public class GamePanel extends JPanel implements KeyListener, Paintable, Runnabl
     private ArrayList<Brick> bricks = new ArrayList<>();
     private Image image;
     private Thread thread;
-    private boolean pause = true;
+    private boolean isPaused = false; // Pauses the game, changing the ball.speed to 0, (recoverable action)
+    private boolean isRunning = true; // Stops the game breaking while loop, doesn't recover running if changed oposite!
     private int bricksCount = 0;
+    public int level = 1;
     public int lives = 3;
     public int score = 0;
-    private boolean isRunning = true;
+
+
 
     public GamePanel() {
         resetScene(true);
@@ -114,20 +117,6 @@ public class GamePanel extends JPanel implements KeyListener, Paintable, Runnabl
                 ball.xDirection *= -1;
                 score++;
                 System.out.println(score);
-
-//                if (score == bricksCount) {
-//                    System.out.println("Level passed!");
-//                    try {
-//                        Thread.sleep(1000);
-//                        thread.interrupt();
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                    this.thread.interrupt();
-//                    this.thread = null;
-//                    this.run();
-//                    this.resetScene();
-//                }
             }
         });
 
@@ -154,9 +143,9 @@ public class GamePanel extends JPanel implements KeyListener, Paintable, Runnabl
     }
 
     public void pause() {
-        pause = !pause;
+        isPaused = !isPaused;
 
-        if (pause) {
+        if (isPaused) {
             ball.speed = 0;
         } else {
             ball.speed = 1;
@@ -194,7 +183,7 @@ public class GamePanel extends JPanel implements KeyListener, Paintable, Runnabl
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_SPACE && thread == null) {
             System.out.println("Space");
-            pause();
+//            pause();
             thread = new Thread(() -> {
                 while (isRunning) {
                     updateView();
@@ -209,21 +198,20 @@ public class GamePanel extends JPanel implements KeyListener, Paintable, Runnabl
         }
 
         if (e.getKeyCode() == KeyEvent.VK_RIGHT && paddle.x < (getWidth() - paddle.width)) {
-            if (!pause) {
+            if (!isPaused) {
                 paddle.x += 15;
                 updateView();
             }
         }
 
         if (e.getKeyCode() == KeyEvent.VK_LEFT && paddle.x > 0) {
-            if (!pause) {
+            if (!isPaused) {
                 paddle.x -= 15;
                 updateView();
             }
         }
 
         if (e.getKeyCode() == KeyEvent.VK_P) {
-//            System.out.println("P");
             pause();
         }
     }
