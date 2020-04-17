@@ -2,11 +2,18 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
-public class Game implements KeyListener {
+public class Game {
     public static Game game = new Game();
     public JFrame menuFrame;
     public JFrame frame;
+    public JFrame scoreFrame;
 //    private JLabel scoreLbl;
     public GamePanel gamePanel;
     private Thread thread;
@@ -14,10 +21,11 @@ public class Game implements KeyListener {
 
     private Game() {
         // Initializations
-        frame = new JFrame("Arkanoid v0.6");
+        frame = new JFrame("Arkanoid v0.7");
+        scoreFrame = new JFrame("Scoreboard");
         gamePanel = new GamePanel();
         menuFrame = new JFrame();
-        JLabel nameLbl = new JLabel("Arkanoid v0.6", SwingConstants.CENTER);
+        JLabel nameLbl = new JLabel("Arkanoid v0.7", SwingConstants.CENTER);
         JButton startBtn = new JButton("Start");
         JButton scoreBtn = new JButton("Scoreboard");
         JButton exitBtn = new JButton("Exit");
@@ -38,6 +46,8 @@ public class Game implements KeyListener {
         menuFrame.setResizable(false);
         menuFrame.setVisible(true);
 
+        scoreFrame.setSize(Const.WINDOW_WIDTH, Const.WINDOW_HEIGHT);
+
         // MARK: Button Action Listeners
         startBtn.addActionListener(listener -> {
             gamePanel = null;
@@ -46,6 +56,25 @@ public class Game implements KeyListener {
             menuFrame.setVisible(false);
             frame.add(gamePanel);
             frame.setVisible(true);
+        });
+
+        // TODO: Create functional scoreboard
+        scoreBtn.addActionListener(listener -> {
+            scoreFrame.add(new ScoreLabel("HELLO"));
+            scoreFrame.add(new ScoreLabel("HELLO1"));
+            scoreFrame.add(new ScoreLabel("HELLO2"));
+            JButton close = new JButton("Close");
+            close.addActionListener(exit->{
+                scoreFrame.setVisible(false);
+                menuFrame.setVisible(true);
+                scoreFrame.removeAll();
+            });
+            scoreFrame.add(close);
+            scoreFrame.setLayout(new GridLayout(4,1));
+            scoreFrame.setVisible(true);
+            menuFrame.setVisible(false);
+//            frame.add(scoreFrame);
+//            frame.setVisible(true);
         });
 
         exitBtn.addActionListener(listener -> {
@@ -90,27 +119,31 @@ public class Game implements KeyListener {
 
     }
 
+    public void gameOver(int score) {
+        String str =
+                "GAME OVER!\nYour Score: " + score + "\n Type your name: ";
+        String name = JOptionPane.showInputDialog(str);
+
+        if (name != null) {
+            String write = name + " " + score + "\n";
+
+            try {
+                Files.write(Paths.get("scores.txt"), write.getBytes(), StandardOpenOption.APPEND);
+            } catch (IOException e) {
+                try {
+                    FileOutputStream f = new FileOutputStream(new File("scores.txt"));
+                    f.write(write.getBytes());
+                    f.close();
+                } catch (IOException e1) {
+                }
+
+            }
+        }
+    }
     /**
      * @return Game() singleton object
      */
     public static Game getInstance() {
         return game;
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-            System.out.println("Enter");
-        }
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-
     }
 }

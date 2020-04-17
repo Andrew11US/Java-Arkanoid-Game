@@ -117,6 +117,7 @@ public class GamePanel extends JPanel implements KeyListener, Paintable, Runnabl
                 System.out.println("Game Over!");
                 removeKeyListener(this);
                 Game game = Game.getInstance();
+                game.gameOver(score);
                 game.menuFrame.setVisible(true);
                 game.frame.setVisible(false);
                 game.frame.remove(this);
