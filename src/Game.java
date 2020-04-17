@@ -5,8 +5,8 @@ import java.awt.event.KeyListener;
 
 public class Game implements KeyListener {
     public static Game game = new Game();
-    private JFrame menuFrame;
-    private JFrame frame;
+    public JFrame menuFrame;
+    public JFrame frame;
 //    private JLabel scoreLbl;
     public GamePanel gamePanel;
     private Thread thread;
@@ -40,7 +40,11 @@ public class Game implements KeyListener {
 
         // MARK: Button Action Listeners
         startBtn.addActionListener(listener -> {
+            gamePanel = null;
+//            frame.remove(gamePanel);
+            gamePanel = new GamePanel();
             menuFrame.setVisible(false);
+            frame.add(gamePanel);
             frame.setVisible(true);
         });
 
@@ -48,7 +52,7 @@ public class Game implements KeyListener {
             System.exit(0);
         });
 
-        frame.add(gamePanel);
+//        frame.add(gamePanel);
 
 
 //        JFrame frame = new JFrame("Border Layout");

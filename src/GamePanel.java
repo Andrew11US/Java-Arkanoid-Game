@@ -20,7 +20,8 @@ public class GamePanel extends JPanel implements KeyListener, Paintable, Runnabl
 
 
     public GamePanel() {
-        resetScene(true);
+//        resetScene(true);
+        newGame();
         addKeyListener(this);
         setFocusable(true);
 //        run();
@@ -34,15 +35,25 @@ public class GamePanel extends JPanel implements KeyListener, Paintable, Runnabl
         g.drawImage(image, 0, 0, this);
     }
 
+    private void newGame() {
+        ball = new Ball();
+        paddle = new Paddle();
+
+        for(int i = 1; i < 7; ++i) {
+            for(int j = 1; j < 5; ++j) {
+                bricks.add(new Brick(i*60,j*40));
+                bricksCount++;
+            }
+        }
+    }
+
     private void resetScene(boolean isNew) {
         ball = new Ball();
         paddle = new Paddle();
 
-//        ball.speed = 1;
 //        lives = 3;
 //        if (!bricks.isEmpty()) bricks.clear();
 
-        // TODO: Refactor to add more lives on level passed
         if (isNew) {
             score = 0;
             bricksCount = 0;
@@ -96,7 +107,7 @@ public class GamePanel extends JPanel implements KeyListener, Paintable, Runnabl
             }
 
             // Loose or game over
-            lives -= 1;
+            lives -= 3;
             if (lives != 0) {
                 resetScene(false);
 
@@ -105,6 +116,10 @@ public class GamePanel extends JPanel implements KeyListener, Paintable, Runnabl
                 isRunning = !isRunning;
                 System.out.println("Game Over!");
                 removeKeyListener(this);
+                Game game = Game.getInstance();
+                game.menuFrame.setVisible(true);
+                game.frame.setVisible(false);
+                game.frame.remove(this);
             }
 
 //            pause();
@@ -122,6 +137,9 @@ public class GamePanel extends JPanel implements KeyListener, Paintable, Runnabl
 
         if (score == bricksCount) {
             System.out.println("Level passed!");
+            level += 1;
+            if (lives != 3) lives+=1;
+            System.out.println("Level: " + level);
 
             if (isRunning) {
                 thread = null;
