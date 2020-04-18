@@ -52,16 +52,12 @@ public class GamePanel extends JPanel implements KeyListener, Paintable, Runnabl
         }
     }
 
-    private void resetScene(boolean isNew) {
+    private void resetScene(boolean isNewLevel) {
         ball = new Ball();
         paddle = new Paddle();
 
-//        lives = 3;
-//        if (!bricks.isEmpty()) bricks.clear();
-
-        if (isNew) {
+        if (isNewLevel) {
             levelScore = 0;
-            score = 0;
             bricksCount = 0;
             //*
             for(int i = 1; i < 7; ++i) {
@@ -78,52 +74,46 @@ public class GamePanel extends JPanel implements KeyListener, Paintable, Runnabl
                 }
             }
             //*/
-
-
-
-
-        } else {
-            // Respawn existing bricks
         }
-
-
-//        pause();
-
     }
 
     public void updateView() {
-
+        // MARK: Constantly updates ball position in certain direction and speed
         ball.x += ball.xDirection * ball.speed;
         ball.y += ball.yDirection * ball.speed;
 
         if (ball.xDirection == 0 || ball.yDirection == 0) {
-            System.out.println(ball.yDirection);
+            System.out.println("Vertical or perpendicular");
+            ball.xDirection *= -1;
+            ball.yDirection *= -1;
         }
 
-        if(ball.x > (getWidth() - ball.width) || ball.x < 0) {
+        // MARK: Ball hits left or right edge
+        if(ball.x < 0 || ball.x + ball.width > getWidth()) {
             ball.xDirection *= -1;
         }
 
-//        if(ball.y < 0 || ball.intersects(paddle)) {
-//            ball.yDirection *= -1;
-//        }
-
+        // MARK: Ball hits a top edge
         if(ball.y < 0) {
             ball.yDirection *= -1;
         }
 
+        // MARK: Ball hits a paddle on top of the platform or on one of the sides
         if(ball.intersects(paddle)) {
             if (ball.x + ball.size < paddle.x + 10) {
                 ball.xDirection *= -1;
+//                ball.yDirection *= -1;
                 System.out.println("Left side intersection");
             } else if (ball.x > paddle.x + paddle.width - 10) {
                 ball.xDirection *= -1;
+//                ball.yDirection *= -1;
                 System.out.println("Right side intersection");
             }
 
             ball.yDirection *= -1;
         }
 
+        // MARK: Ball crosses bottom edge
         if (ball.y > getHeight()) {
             thread = null;
             try {
@@ -155,11 +145,25 @@ public class GamePanel extends JPanel implements KeyListener, Paintable, Runnabl
         bricks.forEach(brick -> {
             if (!brick.destroyed && ball.intersects(brick)) {
                 brick.destroyed = true;
-                ball.yDirection *= -1;
-                ball.xDirection *= -1;
+                if (ball.x + ball.size < brick.x + 5) {
+                    ball.xDirection *= -1;
+                    System.out.println("Left side hit");
+                } else if (ball.x > brick.x + brick.width - 5) {
+                    ball.xDirection *= -1;
+                    System.out.println("Right side hit");
+                } else if (ball.y + ball.size < brick.y + 5) {
+                    ball.yDirection *= -1;
+                    System.out.println("Top side hit");
+                } else if (ball.y > brick.y + brick.height - 5) {
+                    ball.yDirection *= -1;
+                    System.out.println("Bottom side hit");
+                } else {
+                    ball.xDirection *= -1;
+                    ball.yDirection *= -1;
+                }
                 levelScore++;
                 score++;
-                System.out.println(levelScore);
+                System.out.println(score);
             }
         });
 
@@ -243,10 +247,11 @@ public class GamePanel extends JPanel implements KeyListener, Paintable, Runnabl
             thread.start();
         }
 
-        if (e.getKeyCode() == KeyEvent.VK_RIGHT && paddle.x < (getWidth() - paddle.width)) {
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT && paddle.x + paddle.width < getWidth()) {
             if (!isPaused) {
                 paddle.x += 15;
                 updateView();
+//                repaint();
             }
         }
 
@@ -254,6 +259,7 @@ public class GamePanel extends JPanel implements KeyListener, Paintable, Runnabl
             if (!isPaused) {
                 paddle.x -= 15;
                 updateView();
+//                repaint();
             }
         }
 
