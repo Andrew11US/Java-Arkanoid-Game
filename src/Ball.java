@@ -7,11 +7,13 @@ public class Ball extends Block implements Paintable {
     public int xDirection;
     public int yDirection;
     public int speed = 1;
+    public int size;
 
     public Ball() {
         super(250,380,Const.BALL_SIZE,Const.BALL_SIZE);
         this.xDirection = 1;
         this.yDirection = 1;
+        size = width;
 //        this.speed = 1;
     }
 

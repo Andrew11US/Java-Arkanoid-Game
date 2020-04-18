@@ -15,6 +15,7 @@ public class GamePanel extends JPanel implements KeyListener, Paintable, Runnabl
     private int bricksCount = 0;
     public int level = 1;
     public int lives = 3;
+    public int levelScore = 0;
     public int score = 0;
     public JLabel lbl;
 
@@ -34,7 +35,8 @@ public class GamePanel extends JPanel implements KeyListener, Paintable, Runnabl
         bricks.forEach(block -> block.paint(g));
 
         g.drawImage(image, 0, 0, this);
-        g.drawString("Score: "+score,20,20);
+        g.drawString("Level Score: "+ levelScore,20,20);
+        g.drawString("Score: "+ score,20,40);
         g.drawString("Lives: "+lives,440,20);
     }
 
@@ -58,6 +60,7 @@ public class GamePanel extends JPanel implements KeyListener, Paintable, Runnabl
 //        if (!bricks.isEmpty()) bricks.clear();
 
         if (isNew) {
+            levelScore = 0;
             score = 0;
             bricksCount = 0;
             //*
@@ -93,11 +96,28 @@ public class GamePanel extends JPanel implements KeyListener, Paintable, Runnabl
         ball.x += ball.xDirection * ball.speed;
         ball.y += ball.yDirection * ball.speed;
 
-        if(ball.x > (getWidth() - 20) || ball.x < 0) {
+        if (ball.xDirection == 0 || ball.yDirection == 0) {
+            System.out.println(ball.yDirection);
+        }
+
+        if(ball.x > (getWidth() - ball.width) || ball.x < 0) {
             ball.xDirection *= -1;
         }
 
-        if(ball.y < 0 || ball.intersects(paddle)) {
+//        if(ball.y < 0 || ball.intersects(paddle)) {
+//            ball.yDirection *= -1;
+//        }
+
+        if(ball.y < 0) {
+            ball.yDirection *= -1;
+        }
+
+        if(ball.intersects(paddle)) {
+            if (ball.y + ball.size > paddle.y + 5 && ball.getRight() < paddle.x + 10) {
+                ball.xDirection *= -1;
+                System.out.println("Left side intersection");
+            }
+
             ball.yDirection *= -1;
         }
 
@@ -134,25 +154,26 @@ public class GamePanel extends JPanel implements KeyListener, Paintable, Runnabl
                 brick.destroyed = true;
                 ball.yDirection *= -1;
                 ball.xDirection *= -1;
+                levelScore++;
                 score++;
-                System.out.println(score);
+                System.out.println(levelScore);
             }
         });
 
-        if (score == bricksCount) {
+        if (levelScore == bricksCount) {
             System.out.println("Level passed!");
             level += 1;
+//            score += levelScore;
+            levelScore = 0;
             if (lives != 3) lives+=1;
             System.out.println("Level: " + level);
 
             if (isRunning) {
+                isRunning = !isRunning;
                 thread = null;
 
-
-                isRunning = !isRunning;
-
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -182,7 +203,7 @@ public class GamePanel extends JPanel implements KeyListener, Paintable, Runnabl
             while (isRunning) {
                 updateView();
                 try {
-                    Thread.sleep(10);
+                    Thread.sleep(100);
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
                 }
