@@ -11,7 +11,7 @@ public class GamePanel extends JPanel implements KeyListener, Paintable, Runnabl
     private Image image;
     private Thread thread;
     private boolean isPaused = false; // Pauses the game, changing the ball.speed to 0, (recoverable action)
-    private boolean isRunning = true; // Stops the game breaking while loop, doesn't recover running if changed oposite!
+    private boolean isRunning = true; // Stops the game breaking while loop, not recoverable!
     private int bricksCount = 0;
     public int level = 1;
     public int lives = 3;
@@ -113,9 +113,12 @@ public class GamePanel extends JPanel implements KeyListener, Paintable, Runnabl
         }
 
         if(ball.intersects(paddle)) {
-            if (ball.y + ball.size > paddle.y + 5 && ball.getRight() < paddle.x + 10) {
+            if (ball.x + ball.size < paddle.x + 10) {
                 ball.xDirection *= -1;
                 System.out.println("Left side intersection");
+            } else if (ball.x > paddle.x + paddle.width - 10) {
+                ball.xDirection *= -1;
+                System.out.println("Right side intersection");
             }
 
             ball.yDirection *= -1;
