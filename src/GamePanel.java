@@ -10,22 +10,20 @@ public class GamePanel extends JPanel implements KeyListener, Paintable, Runnabl
     private ArrayList<Brick> bricks = new ArrayList<>();
     private Image image;
     private Thread thread;
-    private boolean isPaused = false; // Pauses the game, changing the ball.speed to 0, (recoverable action)
-    private boolean isRunning = true; // Stops the game breaking while loop, not recoverable!
+    // Pauses the game, changing the ball.speed to 0, (recoverable action)
+    private boolean isPaused = true;
+    // Stops the game breaking while loop, not recoverable!
+    private boolean isRunning = true;
     private int bricksCount = 0;
     public int level = 1;
     public int lives = 3;
     public int levelScore = 0;
     public int score = 0;
-    public JLabel lbl;
-
 
     public GamePanel() {
-//        resetScene(true);
-        newGame();
+        resetScene(true);
         addKeyListener(this);
         setFocusable(true);
-//        run();
     }
 
     @Override
@@ -33,23 +31,12 @@ public class GamePanel extends JPanel implements KeyListener, Paintable, Runnabl
         this.ball.paint(g);
         this.paddle.paint(g);
         bricks.forEach(block -> block.paint(g));
+        String levelOutput = String.format("Level %d : %d", level, levelScore);
 
         g.drawImage(image, 0, 0, this);
-        g.drawString("Level Score: "+ levelScore,20,20);
+        g.drawString(levelOutput,20,20);
         g.drawString("Score: "+ score,20,40);
         g.drawString("Lives: "+lives,440,20);
-    }
-
-    private void newGame() {
-        ball = new Ball();
-        paddle = new Paddle();
-
-        for(int i = 1; i < 7; ++i) {
-            for(int j = 1; j < 5; ++j) {
-                bricks.add(new Brick(i*60,j*40));
-                bricksCount++;
-            }
-        }
     }
 
     private void resetScene(boolean isNewLevel) {
@@ -59,7 +46,7 @@ public class GamePanel extends JPanel implements KeyListener, Paintable, Runnabl
         if (isNewLevel) {
             levelScore = 0;
             bricksCount = 0;
-            //*
+            //*/
             for(int i = 1; i < 7; ++i) {
                 for(int j = 1; j < 5; ++j) {
                     bricks.add(new Brick(i*60,j*40));
@@ -84,8 +71,8 @@ public class GamePanel extends JPanel implements KeyListener, Paintable, Runnabl
 
         if (ball.xDirection == 0 || ball.yDirection == 0) {
             System.out.println("Vertical or perpendicular");
-            ball.xDirection *= -1;
-            ball.yDirection *= -1;
+            ball.xDirection = -1;
+            ball.yDirection = -1;
         }
 
         // MARK: Ball hits left or right edge
@@ -102,11 +89,9 @@ public class GamePanel extends JPanel implements KeyListener, Paintable, Runnabl
         if(ball.intersects(paddle)) {
             if (ball.x + ball.size < paddle.x + 10) {
                 ball.xDirection *= -1;
-//                ball.yDirection *= -1;
                 System.out.println("Left side intersection");
             } else if (ball.x > paddle.x + paddle.width - 10) {
                 ball.xDirection *= -1;
-//                ball.yDirection *= -1;
                 System.out.println("Right side intersection");
             }
 
@@ -115,33 +100,27 @@ public class GamePanel extends JPanel implements KeyListener, Paintable, Runnabl
 
         // MARK: Ball crosses bottom edge
         if (ball.y > getHeight()) {
-            thread = null;
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            // Loose or game over
             lives -= 1;
             if (lives != 0) {
                 resetScene(false);
-
-//                pause();
             } else {
-                isRunning = !isRunning;
+                try { Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                isRunning = false;
                 System.out.println("Game Over!");
                 removeKeyListener(this);
+                // Get Game instance to call gameOver method
                 Game game = Game.getInstance();
                 game.gameOver(score);
                 game.menuFrame.setVisible(true);
                 game.frame.setVisible(false);
                 game.frame.remove(this);
             }
-
-//            pause();
         }
 
+        // MARK: Ball hits one or multiple blocks, handling collision
         bricks.forEach(brick -> {
             if (!brick.destroyed && ball.intersects(brick)) {
                 brick.destroyed = true;
@@ -170,24 +149,19 @@ public class GamePanel extends JPanel implements KeyListener, Paintable, Runnabl
         if (levelScore == bricksCount) {
             System.out.println("Level passed!");
             level += 1;
-//            score += levelScore;
             levelScore = 0;
-            if (lives != 3) lives+=1;
+
+            if (lives != 5) {
+                lives+=1;
+            }
             System.out.println("Level: " + level);
 
-            if (isRunning) {
-                isRunning = !isRunning;
-                thread = null;
-
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                resetScene(true);
-                run();
-                isRunning = !isRunning;
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
+            resetScene(true);
         }
         repaint();
     }
@@ -204,13 +178,11 @@ public class GamePanel extends JPanel implements KeyListener, Paintable, Runnabl
 
     @Override
     public void run() {
-//        resetScene();
-//        pause();
         thread = new Thread(() -> {
             while (isRunning) {
                 updateView();
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(10);
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
                 }
@@ -219,47 +191,29 @@ public class GamePanel extends JPanel implements KeyListener, Paintable, Runnabl
         thread.start();
     }
 
-
-
     // MARK: Autogenerated methods for KeyListener
-
     @Override
-    public void keyTyped(KeyEvent e) {
-
-    }
-
+    public void keyTyped(KeyEvent e) { }
 
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_SPACE && thread == null) {
-            System.out.println("Space");
-//            pause();
-            thread = new Thread(() -> {
-                while (isRunning) {
-                    updateView();
-                    try {
-                        Thread.sleep(10);
-                    } catch (InterruptedException ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            });
-            thread.start();
+            run();
+            pause();
+            System.out.println("Space Run");
         }
 
         if (e.getKeyCode() == KeyEvent.VK_RIGHT && paddle.x + paddle.width < getWidth()) {
             if (!isPaused) {
-                paddle.x += 15;
+                paddle.x += 25;
                 updateView();
-//                repaint();
             }
         }
 
         if (e.getKeyCode() == KeyEvent.VK_LEFT && paddle.x > 0) {
             if (!isPaused) {
-                paddle.x -= 15;
+                paddle.x -= 25;
                 updateView();
-//                repaint();
             }
         }
 
@@ -268,11 +222,6 @@ public class GamePanel extends JPanel implements KeyListener, Paintable, Runnabl
         }
     }
 
-
-
-
     @Override
-    public void keyReleased(KeyEvent e) {
-
-    }
+    public void keyReleased(KeyEvent e) { }
 }

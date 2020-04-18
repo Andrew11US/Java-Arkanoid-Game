@@ -27,11 +27,11 @@ public class Game {
 
     private Game() {
         // Initializations
-        frame = new JFrame("Arkanoid v0.92");
+        frame = new JFrame("Arkanoid v0.95");
         scoreFrame = new JFrame("Scoreboard");
         gamePanel = new GamePanel();
         menuFrame = new JFrame();
-        JLabel nameLbl = new JLabel("Arkanoid v0.92", SwingConstants.CENTER);
+        JLabel nameLbl = new JLabel("Arkanoid v0.95", SwingConstants.CENTER);
         JButton startBtn = new JButton("Start");
         JButton scoreBtn = new JButton("Scoreboard");
         JButton exitBtn = new JButton("Exit");
