@@ -20,7 +20,7 @@ public class Game {
     }
     // MARK: Initializes menu with action listeners
     private void initMenu() {
-        String name = new String("Arkanoid v0.98");
+        String name = new String("Arkanoid v0.99");
         JFrame menuFrame = new JFrame(name);
         menuFrame.setSize(Const.WINDOW_WIDTH, Const.WINDOW_HEIGHT);
         JLabel nameLbl = new JLabel(name, SwingConstants.CENTER);
@@ -73,17 +73,8 @@ public class Game {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        // Ascending order
-        scores.sort(new Comparator<String>() {
-            @Override
-            public int compare(String o1, String o2) {
-                int space1 = o1.lastIndexOf(" ");
-                int space2 = o2.lastIndexOf(" ");
-                return o1.substring(o1.length()-(o1.length()-space1)).compareTo(
-                        o2.substring(o2.length()-(o2.length()-space2)));
-            }
-        });
-        // Making descending order
+        // Sorting descending
+        scores.sort(Comparator.naturalOrder());
         Collections.reverse(scores);
 
         // Declarations and assignments
