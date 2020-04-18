@@ -4,7 +4,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
-public class GamePanel extends JPanel implements KeyListener, Paintable, Runnable {
+public class GamePanel extends JPanel implements KeyListener, Runnable, Paintable  {
     private Ball ball;
     private Paddle paddle;
     private ArrayList<Brick> bricks = new ArrayList<>();
@@ -114,9 +114,9 @@ public class GamePanel extends JPanel implements KeyListener, Paintable, Runnabl
                 // Get Game instance to call gameOver method
                 Game game = Game.getInstance();
                 game.gameOver(score);
-                game.menuFrame.setVisible(true);
-                game.frame.setVisible(false);
-                game.frame.remove(this);
+//                game.menuFrame.setVisible(true);
+//                game.frame.setVisible(false);
+//                game.frame.remove(this);
             }
         }
 

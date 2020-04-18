@@ -1,7 +1,7 @@
 import java.awt.*;
 
 /**
- * Paddle class
+ * Paddle class inherited from Block
  */
 public class Paddle extends Block implements Paintable {
 

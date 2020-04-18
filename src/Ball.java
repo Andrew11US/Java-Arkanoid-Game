@@ -2,7 +2,7 @@ import java.awt.*;
 import java.util.Random;
 
 /**
- * Ball class
+ * Ball class inherited from Block
  */
 public class Ball extends Block implements Paintable {
     public int xDirection;

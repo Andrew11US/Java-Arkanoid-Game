@@ -36,3 +36,11 @@ FFFFFF 29
 yyu8 13
 nnn 2
 t 2
+ds 3
+f 3
+3wse 6
+ggg 4
+fff 6
+sss 11
+u 4
+iop 9

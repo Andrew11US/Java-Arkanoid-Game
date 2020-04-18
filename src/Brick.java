@@ -1,7 +1,7 @@
 import java.awt.*;
 
 /**
- * Brick class
+ * Brick class inherited from Block
  */
 public class Brick extends Block implements Paintable {
     public boolean destroyed = false;
