@@ -106,21 +106,26 @@ public class Game {
     public void gameOver(int score) {
         String str = "GAME OVER!\nYour Score: " + score + "\n Type your name: ";
         String name = JOptionPane.showInputDialog(str);
+        String scoreStr;
 
-        if (name != null) {
-            String write = name + " " + score + System.lineSeparator();
-
+        // TODO: Fix incognito if name is not provided
+        if (!name.trim().isEmpty()) {
+            scoreStr = score + " " + name + System.lineSeparator();
+        } else {
+            scoreStr = score + " " + "Player X" + System.lineSeparator();
+        }
+        try {
+            Files.write(Paths.get("scores.txt"), scoreStr.getBytes(), StandardOpenOption.APPEND);
+        } catch (IOException e) {
             try {
-                Files.write(Paths.get("scores.txt"), write.getBytes(), StandardOpenOption.APPEND);
-            } catch (IOException e) {
-                try {
-                    FileOutputStream f = new FileOutputStream(new File("scores.txt"));
-                    f.write(write.getBytes());
-                    f.close();
-                } catch (IOException e1) {
-                }
+                FileOutputStream fileOutputStream = new FileOutputStream(new File("scores.txt"));
+                fileOutputStream.write(scoreStr.getBytes());
+                fileOutputStream.close();
+            } catch (IOException ex) {
+                ex.getStackTrace();
             }
         }
+
         initMenu();
     }
 
