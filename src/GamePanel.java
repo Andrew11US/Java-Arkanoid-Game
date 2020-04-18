@@ -16,7 +16,7 @@ public class GamePanel extends JPanel implements KeyListener, Paintable, Runnabl
     public int level = 1;
     public int lives = 3;
     public int score = 0;
-
+    public JLabel lbl;
 
 
     public GamePanel() {
@@ -32,7 +32,10 @@ public class GamePanel extends JPanel implements KeyListener, Paintable, Runnabl
         this.ball.paint(g);
         this.paddle.paint(g);
         bricks.forEach(block -> block.paint(g));
+
         g.drawImage(image, 0, 0, this);
+        g.drawString("Score: "+score,20,20);
+        g.drawString("Lives: "+lives,440,20);
     }
 
     private void newGame() {
@@ -107,7 +110,7 @@ public class GamePanel extends JPanel implements KeyListener, Paintable, Runnabl
             }
 
             // Loose or game over
-            lives -= 3;
+            lives -= 1;
             if (lives != 0) {
                 resetScene(false);
 

@@ -41,7 +41,7 @@ public class Game {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
 
-        // Using BorderLayout to compound multiple buttons on one JFrame
+        // Using GridLayout to compound multiple buttons on one JFrame
         menuFrame.add(nameLbl);
         menuFrame.add(startBtn);
         menuFrame.add(scoreBtn);
@@ -64,7 +64,7 @@ public class Game {
             frame.setVisible(true);
         });
 
-        // TODO: Create functional scoreboard
+        // TODO: Refactor to separate function
         scoreBtn.addActionListener(listener -> {
             try (Stream<String> lines = Files.lines(Paths.get("scores.txt"), Charset.defaultCharset())) {
                 lines.forEachOrdered(line -> scores.add(line));
@@ -154,12 +154,10 @@ public class Game {
 //            }
 //        });
 //        thread.start();
-
     }
 
     public void gameOver(int score) {
-        String str =
-                "GAME OVER!\nYour Score: " + score + "\n Type your name: ";
+        String str = "GAME OVER!\nYour Score: " + score + "\n Type your name: ";
         String name = JOptionPane.showInputDialog(str);
 
         if (name != null) {
