@@ -20,7 +20,7 @@ public class Game {
     }
     // MARK: Initializes menu with action listeners
     private void initMenu() {
-        String name = new String("Arkanoid v0.99");
+        String name = new String("Arkanoid v1.0");
         JFrame menuFrame = new JFrame(name);
         menuFrame.setSize(Const.WINDOW_WIDTH, Const.WINDOW_HEIGHT);
         JLabel nameLbl = new JLabel(name, SwingConstants.CENTER);

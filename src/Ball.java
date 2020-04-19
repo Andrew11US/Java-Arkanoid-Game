@@ -36,7 +36,12 @@ public class Ball extends Block implements Paintable {
 
     @Override
     public void paint(Graphics g) {
-        g.setColor(Color.BLACK);
+        if (speed == 0) {
+            g.setColor(Color.GRAY);
+        } else {
+            g.setColor(Color.GREEN);
+        }
+
         g.fillOval(x, y, Const.BALL_SIZE, Const.BALL_SIZE);
     }
 }

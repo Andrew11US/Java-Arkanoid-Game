@@ -15,7 +15,7 @@ public class Paddle extends Block implements Paintable {
 
     @Override
     public void paint(Graphics g) {
-        g.setColor(Color.BLACK);
+        g.setColor(Color.LIGHT_GRAY);
         g.fillRoundRect(x,y,width,height,Const.PADDLE_HEIGHT,Const.PADDLE_HEIGHT);
     }
 }

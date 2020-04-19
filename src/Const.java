@@ -5,8 +5,8 @@
  */
 public class Const {
     // MARK: App constants
-    public static final int WINDOW_WIDTH = 500;
-    public static final int WINDOW_HEIGHT = 500;
+    public static final int WINDOW_WIDTH = 710;
+    public static final int WINDOW_HEIGHT = 710;
 
     // MARK: Game constants
     public static final int BALL_SIZE = 20;
@@ -14,5 +14,5 @@ public class Const {
     public static final int PADDLE_HEIGHT = 10;
     public static final int BRICK_WIDTH = 50;
     public static final int BRICK_HEIGHT = 30;
-    public static final int GAME_SPEED = 10;
+    public static final int GAME_SPEED = 5;
 }
