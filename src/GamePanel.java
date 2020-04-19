@@ -15,7 +15,7 @@ public class GamePanel extends JPanel implements KeyListener, Runnable, Paintabl
     // Stops the game breaking while loop, not recoverable!
     private boolean isRunning = true;
     private int bricksCount = 0;
-    public int level = 1;
+    public int level = 3;
     public int lives = 3;
     public int levelScore = 0;
     public int score = 0;
@@ -36,7 +36,7 @@ public class GamePanel extends JPanel implements KeyListener, Runnable, Paintabl
         g.drawImage(image, 0, 0, this);
         g.drawString(levelOutput,20,20);
         g.drawString("Score: "+ score,20,40);
-        g.drawString("Lives: "+lives,440,20);
+        g.drawString("Lives: "+lives,Const.WINDOW_WIDTH - 60,20);
     }
 
     private void resetScene(boolean isNewLevel) {
@@ -48,7 +48,7 @@ public class GamePanel extends JPanel implements KeyListener, Runnable, Paintabl
             bricksCount = 0;
             //*/
             for(int i = 1; i < 7; ++i) {
-                for(int j = 1; j < 5; ++j) {
+                for(int j = 1; j < 5 + (level % 4); ++j) {
                     bricks.add(new Brick(i*60,j*40));
                     bricksCount++;
                 }
@@ -182,7 +182,7 @@ public class GamePanel extends JPanel implements KeyListener, Runnable, Paintabl
             while (isRunning) {
                 updateView();
                 try {
-                    Thread.sleep(10);
+                    Thread.sleep(Const.GAME_SPEED);
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
                 }

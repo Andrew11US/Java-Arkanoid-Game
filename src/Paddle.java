@@ -5,8 +5,12 @@ import java.awt.*;
  */
 public class Paddle extends Block implements Paintable {
 
+    // MARK: Generation Paddle x position in the middle regardless Window_Size
     public Paddle() {
-        super(200,400,Const.PADDLE_WIDTH,Const.PADDLE_HEIGHT);
+        super((Const.WINDOW_WIDTH / 2)-(Const.PADDLE_WIDTH / 2),
+                Const.WINDOW_HEIGHT - 50,
+                Const.PADDLE_WIDTH,
+                Const.PADDLE_HEIGHT);
     }
 
     @Override

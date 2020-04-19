@@ -12,13 +12,26 @@ public class Ball extends Block implements Paintable {
     Random random = new Random();
 
     public Ball() {
-        super(250,250,Const.BALL_SIZE,Const.BALL_SIZE);
+        super(Const.WINDOW_WIDTH / 2,
+                Const.WINDOW_HEIGHT / 2,
+                Const.BALL_SIZE,
+                Const.BALL_SIZE);
         this.xDirection = 1;
         this.yDirection = -1;
         size = width;
         // MARK: generating random ball position
-        x = random.nextInt((300-200)+1)+200;
-        y = random.nextInt((300-250)+1)+250;
+        int rightBound = (Const.WINDOW_WIDTH / 2) + Const.PADDLE_WIDTH;
+        int leftBound = (Const.WINDOW_WIDTH / 2) - Const.PADDLE_WIDTH;
+        int topBound = Const.WINDOW_HEIGHT - 200;
+        int bottomBound = Const.WINDOW_HEIGHT - 80;
+
+        x = random.nextInt((rightBound -leftBound))+leftBound;
+        y = random.nextInt((bottomBound-topBound))+topBound;
+
+//        System.out.println(rightBound);
+//        System.out.println(leftBound);
+//        System.out.println(topBound);
+//        System.out.println(bottomBound);
     }
 
     @Override

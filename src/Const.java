@@ -14,4 +14,5 @@ public class Const {
     public static final int PADDLE_HEIGHT = 10;
     public static final int BRICK_WIDTH = 50;
     public static final int BRICK_HEIGHT = 30;
+    public static final int GAME_SPEED = 10;
 }
