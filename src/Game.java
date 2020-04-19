@@ -20,7 +20,7 @@ public class Game {
     }
     // MARK: Initializes menu with action listeners
     private void initMenu() {
-        String name = new String("Arkanoid v1.0.1");
+        String name = new String("Arkanoid v1.0.2");
         JFrame menuFrame = new JFrame(name);
         menuFrame.getContentPane().setBackground(Color.BLACK);
         menuFrame.setSize(Const.WINDOW_WIDTH, Const.WINDOW_HEIGHT);
@@ -75,8 +75,18 @@ public class Game {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        // Sorting descending
-        scores.sort(Comparator.naturalOrder());
+
+        // Sorting descending by Score
+        scores.sort(new Comparator<String>() {
+            @Override
+            public int compare(String str1, String str2) {
+                int space1 = str1.indexOf(" ");
+                int space2 = str2.indexOf(" ");
+                Integer a = Integer.parseInt(str1.substring(0,space1));
+                Integer b = Integer.parseInt(str2.substring(0,space2));
+                return a.compareTo(b);
+            }
+        });
         Collections.reverse(scores);
 
         // Declarations and assignments
@@ -88,6 +98,7 @@ public class Game {
         scrollableTextArea.getViewport().setOpaque(false);
         scrollableTextArea.setOpaque(false);
         scrollableTextArea.getVerticalScrollBar().setPreferredSize (new Dimension(0,0));
+        scrollableTextArea.getHorizontalScrollBar().setPreferredSize (new Dimension(0,0));
 
         scores.forEach(item-> textArea.append(item + System.lineSeparator()));
         scoreFrame.getContentPane().add(titleLbl, BorderLayout.NORTH);

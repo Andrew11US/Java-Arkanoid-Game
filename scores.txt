@@ -3,8 +3,6 @@
 3 B
 4 D
 99 FF
-
-u 6
 3 
 4 
 1 
@@ -18,3 +16,5 @@ u 6
 24 sdsd
 3 Player X
 16 Player X
+5 cc
+11 Player X
