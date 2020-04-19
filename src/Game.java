@@ -20,7 +20,7 @@ public class Game {
     }
     // MARK: Initializes menu with action listeners
     private void initMenu() {
-        String name = new String("Arkanoid v1.0.2");
+        String name = new String("Arkanoid v1.0.3");
         JFrame menuFrame = new JFrame(name);
         menuFrame.getContentPane().setBackground(Color.BLACK);
         menuFrame.setSize(Const.WINDOW_WIDTH, Const.WINDOW_HEIGHT);
@@ -115,15 +115,15 @@ public class Game {
     }
 
     // MARK: Gets score and writes it to scores.txt tile, creates file if it doesn't exist
-    public void gameOver(int score) {
+    public void endGame(int score) {
         String str = "GAME OVER!\nYour Score: " + score + "\n Type your name: ";
         String name = JOptionPane.showInputDialog(str);
         String scoreStr;
 
         if (!name.trim().isEmpty()) {
-            scoreStr = score + " " + name + System.lineSeparator();
+            scoreStr = System.lineSeparator() + score + " " + name;
         } else {
-            scoreStr = score + " " + "Player X" + System.lineSeparator();
+            scoreStr = System.lineSeparator() + score + " " + "Player X";
         }
         try {
             Files.write(Paths.get("scores.txt"), scoreStr.getBytes(), StandardOpenOption.APPEND);
