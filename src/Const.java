@@ -5,8 +5,8 @@
  */
 public class Const {
     // MARK: App constants
-    public static final int WINDOW_WIDTH = 710;
-    public static final int WINDOW_HEIGHT = 710;
+    public static final int WINDOW_WIDTH = 510;
+    public static final int WINDOW_HEIGHT = 510;
 
     // MARK: Game constants
     public static final int BALL_SIZE = 20;

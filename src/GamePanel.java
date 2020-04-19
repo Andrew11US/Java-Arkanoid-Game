@@ -30,11 +30,12 @@ public class GamePanel extends JPanel implements KeyListener, Runnable, Paintabl
     public void paint(Graphics g) {
         // MARK: Makes black background
         g.fillRect(0,0,Const.WINDOW_WIDTH,Const.WINDOW_HEIGHT);
+
         ball.paint(g);
         paddle.paint(g);
         bricks.forEach(block -> block.paint(g));
-        String levelOutput = String.format("Level %d: %d", level, levelScore);
 
+        String levelOutput = String.format("Level %d: %d", level, levelScore);
         g.drawImage(image, 0, 0, this);
         g.setColor(Color.WHITE);
         g.setFont(new Font("Calibri",Font.BOLD,16));
@@ -51,7 +52,7 @@ public class GamePanel extends JPanel implements KeyListener, Runnable, Paintabl
             levelScore = 0;
             bricksCount = 0;
             //*/
-            for(int i = 1; i < 11; ++i) {
+            for(int i = 1; i < 8; ++i) {
                 for(int j = 1; j < 2 + ((level-1) % 10); ++j) {
                     bricks.add(new Brick(i*(Const.BRICK_WIDTH+10),j*(Const.BRICK_HEIGHT+10)));
                     bricksCount++;
@@ -175,6 +176,7 @@ public class GamePanel extends JPanel implements KeyListener, Runnable, Paintabl
 
         if (isPaused) {
             ball.speed = 0;
+            System.out.println("Paused");
         } else {
             ball.speed = 1;
         }
