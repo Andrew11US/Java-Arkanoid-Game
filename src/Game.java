@@ -20,7 +20,7 @@ public class Game {
     }
     // MARK: Initializes menu with action listeners
     private void initMenu() {
-        String name = new String("Arkanoid v1.0.3");
+        String name = new String("Arkanoid v1.0.4");
         JFrame menuFrame = new JFrame(name);
         menuFrame.getContentPane().setBackground(Color.BLACK);
         menuFrame.setSize(Const.WINDOW_WIDTH, Const.WINDOW_HEIGHT);
@@ -73,7 +73,7 @@ public class Game {
         try (Stream<String> lines = Files.lines(Paths.get("scores.txt"), Charset.defaultCharset())) {
             lines.forEachOrdered(line -> scores.add(line));
         } catch (IOException e) {
-            e.printStackTrace();
+            scores.add("Nothing to Show");
         }
 
         // Sorting descending by Score
@@ -121,9 +121,9 @@ public class Game {
         String scoreStr;
 
         if (!name.trim().isEmpty()) {
-            scoreStr = System.lineSeparator() + score + " " + name;
+            scoreStr = score + " " + name + System.lineSeparator();
         } else {
-            scoreStr = System.lineSeparator() + score + " " + "Player X";
+            scoreStr = score + " " + "Player X" + System.lineSeparator();
         }
         try {
             Files.write(Paths.get("scores.txt"), scoreStr.getBytes(), StandardOpenOption.APPEND);

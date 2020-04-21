@@ -106,7 +106,7 @@ public class GamePanel extends JPanel implements KeyListener, Runnable, Paintabl
         // MARK: Ball crosses bottom edge
         if (ball.y > getHeight()) {
             lives -= 1;
-            if (lives != 0) {
+            if (lives > 0) {
                 resetScene(false);
             } else {
                 try { Thread.sleep(1000);
