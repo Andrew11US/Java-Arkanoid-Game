@@ -1,8 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
-
+// Custom black text area
 public class BlackTextArea extends JTextArea {
-
+    // BlackTextArea constructor
     public BlackTextArea(int rows, int columns) {
         super(rows, columns);
         setForeground(Color.WHITE);

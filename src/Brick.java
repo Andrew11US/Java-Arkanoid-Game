@@ -5,11 +5,12 @@ import java.awt.*;
  */
 public class Brick extends Block implements Paintable {
     public boolean destroyed = false;
-
+    // Brick constructor
     public Brick(int x, int y) {
         super(x, y,Const.BRICK_WIDTH,Const.BRICK_HEIGHT);
     }
 
+    // Implementing paint method for graphic objects
     @Override
     public void paint(Graphics g) {
         if (!destroyed) {

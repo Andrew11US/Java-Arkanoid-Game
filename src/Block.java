@@ -5,6 +5,7 @@ import java.awt.*;
  */
 abstract class Block extends Rectangle {
 
+    // Block constructor
     public Block(int x, int y, int width, int height) {
         this.width = width;
         this.height = height;

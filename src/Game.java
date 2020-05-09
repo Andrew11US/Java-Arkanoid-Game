@@ -13,23 +13,27 @@ import java.util.Comparator;
 import java.util.stream.Stream;
 
 public class Game {
-    public static Game game = new Game();
+    // Creating singleton object of type Game
+    private static Game game = new Game();
 
+    // Game constructor
     private Game() {
         initMenu();
     }
-    // MARK: Initializes menu with action listeners
+    // MARK: Initializes menu with UI elements and adding action listeners
     private void initMenu() {
-        String name = new String("Arkanoid v1.0.4");
+        String name = "Arkanoid v1.0.5";
         JFrame menuFrame = new JFrame(name);
         menuFrame.getContentPane().setBackground(Color.BLACK);
         menuFrame.setSize(Const.WINDOW_WIDTH, Const.WINDOW_HEIGHT);
+
+        // Declaring and initializing UI Controls
         BlackLabel nameLbl = new BlackLabel(name);
         BlackButton startBtn = new BlackButton("Start", Color.WHITE);
         BlackButton scoreBtn = new BlackButton("Scoreboard", Color.WHITE);
         BlackButton exitBtn = new BlackButton("Exit", Color.RED);
 
-        // Using GridLayout to compound multiple buttons on one JFrame
+        // Using GridLayout to compound UI elements on one JFrame
         menuFrame.add(nameLbl);
         menuFrame.add(startBtn);
         menuFrame.add(scoreBtn);
@@ -53,30 +57,32 @@ public class Game {
         });
     }
 
+    // Compount Game UI using gamePanel as main view to display game elements
     private void newGame() {
         JFrame frame = new JFrame("Arkanoid by Andrii Halabuda");
         GamePanel gamePanel = new GamePanel();
         frame.setSize(Const.WINDOW_WIDTH, Const.WINDOW_HEIGHT);
-        frame.setLayout(new BorderLayout());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.add(gamePanel);
         frame.setVisible(true);
     }
 
+    // Create Scoreboard UI and populate it with appropriate data from persistent storage
     private void showScoreboard() {
         JFrame scoreFrame = new JFrame("Scoreboard");
         scoreFrame.getContentPane().setBackground(Color.BLACK);
         scoreFrame.setSize(Const.WINDOW_WIDTH, Const.WINDOW_HEIGHT);
+        // Scores list to be read, sorted and populated to the TextArea
         ArrayList<String> scores = new ArrayList<>();
-
+        // Parsing "scores.txt" if exists, indicates error message instead
         try (Stream<String> lines = Files.lines(Paths.get("scores.txt"), Charset.defaultCharset())) {
             lines.forEachOrdered(line -> scores.add(line));
-        } catch (IOException e) {
-            scores.add("Nothing to Show");
-        }
+        } catch (IOException e) { scores.add("Nothing to Show"); }
 
-        // Sorting descending by Score
+        // Sort descending by Score using custom comparator
+        // Getting space indices, parsing int value before player name in the file
+        // Sorting with comparator
         scores.sort(new Comparator<String>() {
             @Override
             public int compare(String str1, String str2) {
@@ -87,24 +93,25 @@ public class Game {
                 return a.compareTo(b);
             }
         });
+        // Make descending order
         Collections.reverse(scores);
 
-        // Declarations and assignments
+        // Compound View and embedding TextArea into ScrollPane
         BlackLabel titleLbl = new BlackLabel("Scoreboard");
         BlackTextArea textArea = new BlackTextArea(20,3);
         JScrollPane scrollableTextArea = new JScrollPane(textArea);
         JButton close = new JButton("Close");
-
+        // UI Controls setup
         scrollableTextArea.getViewport().setOpaque(false);
         scrollableTextArea.setOpaque(false);
         scrollableTextArea.getVerticalScrollBar().setPreferredSize (new Dimension(0,0));
         scrollableTextArea.getHorizontalScrollBar().setPreferredSize (new Dimension(0,0));
-
+        // Populating TextArea with scores data
         scores.forEach(item-> textArea.append(item + System.lineSeparator()));
         scoreFrame.getContentPane().add(titleLbl, BorderLayout.NORTH);
         scoreFrame.getContentPane().add(scrollableTextArea, BorderLayout.CENTER);
         scoreFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+        // Setting close button and it listener
         close.setSize(Const.WINDOW_WIDTH,30);
         close.addActionListener(exit->{
             scoreFrame.setVisible(false);
@@ -114,34 +121,36 @@ public class Game {
         scoreFrame.setVisible(true);
     }
 
-    // MARK: Gets score and writes it to scores.txt tile, creates file if it doesn't exist
+    // MARK: Game Over method
     public void endGame(int score) {
+        // Compound and show game over message dialog using option pane
         String str = "GAME OVER!\nYour Score: " + score + "\n Type your name: ";
         String name = JOptionPane.showInputDialog(str);
         String scoreStr;
-
+        // Getting user name falling back to default name in case of empty
         if (!name.trim().isEmpty()) {
             scoreStr = score + " " + name + System.lineSeparator();
         } else {
             scoreStr = score + " " + "Player X" + System.lineSeparator();
         }
         try {
+            // Trying to parse scores file
             Files.write(Paths.get("scores.txt"), scoreStr.getBytes(), StandardOpenOption.APPEND);
         } catch (IOException e) {
             try {
+                // File could not be parsed, does not exist yet, creating the new one
                 FileOutputStream fileOutputStream = new FileOutputStream(new File("scores.txt"));
                 fileOutputStream.write(scoreStr.getBytes());
                 fileOutputStream.close();
             } catch (IOException ex) {
+                // Throwing an exception when file could not be created for the first time
                 ex.getStackTrace();
             }
         }
-
+        // Back to menu after game is over
         initMenu();
     }
 
     // MARK: Returns Game singleton object
-    public static Game getInstance() {
-        return game;
-    }
+    public static Game getInstance() { return game; }
 }

@@ -10,16 +10,16 @@ public class Ball extends Block implements Paintable {
     public int speed = 1;
     public int size;
     Random random = new Random();
-
+    // Ball constructor
     public Ball() {
         super(Const.WINDOW_WIDTH / 2,
                 Const.WINDOW_HEIGHT / 2,
                 Const.BALL_SIZE,
                 Const.BALL_SIZE);
-        this.xDirection = 1;
-        this.yDirection = -1;
+        xDirection = 1;
+        yDirection = -1;
         size = width;
-        // MARK: generating random ball position
+        // MARK: generating ball start position randomly
         int rightBound = (Const.WINDOW_WIDTH / 2) + Const.PADDLE_WIDTH;
         int leftBound = (Const.WINDOW_WIDTH / 2) - Const.PADDLE_WIDTH;
         int topBound = Const.WINDOW_HEIGHT - 200;
@@ -27,20 +27,13 @@ public class Ball extends Block implements Paintable {
 
         x = random.nextInt((rightBound -leftBound))+leftBound;
         y = random.nextInt((bottomBound-topBound))+topBound;
-
-//        System.out.println(rightBound);
-//        System.out.println(leftBound);
-//        System.out.println(topBound);
-//        System.out.println(bottomBound);
     }
 
+    // Paint method to draw the object using Graphics
     @Override
     public void paint(Graphics g) {
-        if (speed == 0) {
-            g.setColor(Color.GRAY);
-        } else {
-            g.setColor(Color.GREEN);
-        }
+        if (speed == 0) g.setColor(Color.GRAY);
+        else g.setColor(Color.GREEN);
 
         g.fillOval(x, y, Const.BALL_SIZE, Const.BALL_SIZE);
     }

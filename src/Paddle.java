@@ -13,6 +13,7 @@ public class Paddle extends Block implements Paintable {
                 Const.PADDLE_HEIGHT);
     }
 
+    // Paint method to draw the object using Graphics
     @Override
     public void paint(Graphics g) {
         g.setColor(Color.LIGHT_GRAY);
