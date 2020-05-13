@@ -25,7 +25,7 @@ public class Game {
     }
     // MARK: Initializes menu with UI elements and adding action listeners
     private void initMenu() {
-        String name = "Arkanoid v1.0.6";
+        String name = "Arkanoid v1.0.7";
         menuFrame = new JFrame(name);
         menuFrame.getContentPane().setBackground(Color.BLACK);
         menuFrame.setSize(Const.WINDOW_WIDTH, Const.WINDOW_HEIGHT);

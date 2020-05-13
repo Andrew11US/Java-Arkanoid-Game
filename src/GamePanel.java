@@ -44,6 +44,11 @@ public class GamePanel extends JPanel implements KeyListener, Runnable, Paintabl
         g.drawString(levelOutput,20,20);
         g.drawString("Score: "+ score,Const.WINDOW_WIDTH/2 - 30,20);
         g.drawString("Lives: "+lives,Const.WINDOW_WIDTH - 80,20);
+        
+        if (ball.speed == 0) {
+            g.setFont(new Font("Calibri",Font.BOLD,22));
+            g.drawString("Paused",Const.WINDOW_WIDTH/2-40,Const.WINDOW_HEIGHT/2);
+        }
     }
 
     // MARK: reset scene method called when new game, lost life or level reset needed
@@ -178,13 +183,13 @@ public class GamePanel extends JPanel implements KeyListener, Runnable, Paintabl
     // MARK: Pause game method
     public void pause() {
         isPaused = !isPaused;
-
         if (isPaused) {
             ball.speed = 0;
             System.out.println("Paused");
         } else {
             ball.speed = 1;
         }
+        repaint();
     }
 
     // MARK: Implementing Runnable method
