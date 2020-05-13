@@ -15,6 +15,9 @@ import java.util.stream.Stream;
 public class Game {
     // Creating singleton object of type Game
     private static Game game = new Game();
+    private JFrame menuFrame;
+    private JFrame gameFrame;
+    private JFrame scoreFrame;
 
     // Game constructor
     private Game() {
@@ -22,8 +25,8 @@ public class Game {
     }
     // MARK: Initializes menu with UI elements and adding action listeners
     private void initMenu() {
-        String name = "Arkanoid v1.0.5";
-        JFrame menuFrame = new JFrame(name);
+        String name = "Arkanoid v1.0.6";
+        menuFrame = new JFrame(name);
         menuFrame.getContentPane().setBackground(Color.BLACK);
         menuFrame.setSize(Const.WINDOW_WIDTH, Const.WINDOW_HEIGHT);
 
@@ -41,6 +44,7 @@ public class Game {
         menuFrame.setLayout(new GridLayout(5,1));
         menuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         menuFrame.setResizable(false);
+        menuFrame.setLocationRelativeTo(null);
         menuFrame.setVisible(true);
 
         // MARK: Menu Button Action Listeners
@@ -59,18 +63,21 @@ public class Game {
 
     // Compount Game UI using gamePanel as main view to display game elements
     private void newGame() {
-        JFrame frame = new JFrame("Arkanoid by Andrii Halabuda");
+        gameFrame = new JFrame("Arkanoid by Andrii Halabuda");
         GamePanel gamePanel = new GamePanel();
-        frame.setSize(Const.WINDOW_WIDTH, Const.WINDOW_HEIGHT);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setResizable(false);
-        frame.add(gamePanel);
-        frame.setVisible(true);
+        gameFrame.setSize(Const.WINDOW_WIDTH, Const.WINDOW_HEIGHT);
+        gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        gameFrame.add(gamePanel);
+        gameFrame.setResizable(false);
+        gameFrame.setLocationRelativeTo(null);
+        gameFrame.setVisible(true);
+        menuFrame.setVisible(false);
+        menuFrame = null;
     }
 
     // Create Scoreboard UI and populate it with appropriate data from persistent storage
     private void showScoreboard() {
-        JFrame scoreFrame = new JFrame("Scoreboard");
+        scoreFrame = new JFrame("Scoreboard");
         scoreFrame.getContentPane().setBackground(Color.BLACK);
         scoreFrame.setSize(Const.WINDOW_WIDTH, Const.WINDOW_HEIGHT);
         // Scores list to be read, sorted and populated to the TextArea
@@ -114,11 +121,15 @@ public class Game {
         // Setting close button and it listener
         close.setSize(Const.WINDOW_WIDTH,30);
         close.addActionListener(exit->{
+            initMenu();
             scoreFrame.setVisible(false);
-            scoreFrame.removeAll();
+            scoreFrame = null;
         });
         scoreFrame.add(close, BorderLayout.SOUTH);
+        scoreFrame.setLocationRelativeTo(null);
         scoreFrame.setVisible(true);
+        menuFrame.setVisible(false);
+        menuFrame = null;
     }
 
     // MARK: Game Over method
@@ -149,6 +160,9 @@ public class Game {
         }
         // Back to menu after game is over
         initMenu();
+        // Invalidate gameFrame
+        gameFrame.setVisible(false);
+        gameFrame = null;
     }
 
     // MARK: Returns Game singleton object

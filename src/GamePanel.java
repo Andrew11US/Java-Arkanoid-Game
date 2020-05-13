@@ -15,7 +15,7 @@ public class GamePanel extends JPanel implements KeyListener, Runnable, Paintabl
     // Game metrics variables
     private int bricksCount = 0;
     public int level = 1;
-    public int lives = 3;
+    public int lives = 1;
     public int levelScore = 0;
     public int score = 0;
 
@@ -62,9 +62,9 @@ public class GamePanel extends JPanel implements KeyListener, Runnable, Paintabl
                 }
             }
             /*/
-            for(int i = 2; i < 3; ++i) {
-                for(int j = 2; j < 3; ++j) {
-                    bricks.add(new Brick(i*120,j*40));
+            for(int i = 1; i < 8; ++i) {
+                for(int j = 1; j < 5; ++j) {
+                    bricks.add(new Brick(i*(Const.BRICK_WIDTH+10),j*(Const.BRICK_HEIGHT+10)));
                     bricksCount++;
                 }
             }
