@@ -15,7 +15,7 @@ public class GamePanel extends JPanel implements KeyListener, Runnable, Paintabl
     // Game metrics variables
     private int bricksCount = 0;
     public int level = 1;
-    public int lives = 1;
+    public int lives = 3;
     public int levelScore = 0;
     public int score = 0;
 
@@ -44,14 +44,19 @@ public class GamePanel extends JPanel implements KeyListener, Runnable, Paintabl
         g.drawString(levelOutput,20,20);
         g.drawString("Score: "+ score,Const.WINDOW_WIDTH/2 - 30,20);
         g.drawString("Lives: "+lives,Const.WINDOW_WIDTH - 80,20);
-        
+
         if (ball.speed == 0) {
             g.setFont(new Font("Calibri",Font.BOLD,22));
             g.drawString("Paused",Const.WINDOW_WIDTH/2-40,Const.WINDOW_HEIGHT/2);
         }
+
+        if (thread == null) {
+            g.setFont(new Font("Calibri",Font.BOLD,22));
+            g.drawString("SPACE to start",Const.WINDOW_WIDTH/2-80,Const.WINDOW_HEIGHT/2);
+        }
     }
 
-    // MARK: reset scene method called when new game, lost life or level reset needed
+    // MARK: reset scene method called when new game initiated, lost life or level reset needed
     private void resetScene(boolean isNewLevel) {
         ball = new Ball();
         paddle = new Paddle();

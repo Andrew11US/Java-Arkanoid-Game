@@ -13,7 +13,7 @@ import java.util.Comparator;
 import java.util.stream.Stream;
 
 public class Game {
-    // Creating singleton object of type Game
+    // Creating shared instance
     private static Game game = new Game();
     private JFrame menuFrame;
     private JFrame gameFrame;
@@ -25,7 +25,7 @@ public class Game {
     }
     // MARK: Initializes menu with UI elements and adding action listeners
     private void initMenu() {
-        String name = "Arkanoid v1.0.7";
+        String name = "Arkanoid v1.0.8";
         menuFrame = new JFrame(name);
         menuFrame.getContentPane().setBackground(Color.BLACK);
         menuFrame.setSize(Const.WINDOW_WIDTH, Const.WINDOW_HEIGHT);
